@@ -9,7 +9,7 @@ jobs:
     runs-on: macOS-latest
     strategy:
       matrix:
-        ruby: ['2.7']
+        ruby: ['3.1']
         
     steps:
     - name: Checkout Repository
@@ -25,6 +25,24 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
+        
+    - name: Set up Fastlane
+      run: brew install fastlane
 
-    - name: Test Git Access
-      run: git clone ${{ secrets.MATCH_GIT_REPO }}
+    - name: Deploy iOS Beta to TestFlight via Fastlane
+      run: fastlane beta
+      env:
+        APP_STORE_CONNECT_TEAM_ID: '${{ secrets.APP_STORE_CONNECT_TEAM_ID }}'
+        DEVELOPER_APP_ID: '${{ secrets.DEVELOPER_APP_ID }}'
+        DEVELOPER_APP_IDENTIFIER: '${{ secrets.DEVELOPER_APP_IDENTIFIER }}'
+        DEVELOPER_PORTAL_TEAM_ID: '${{ secrets.DEVELOPER_PORTAL_TEAM_ID }}'
+        FASTLANE_APPLE_ID: '${{ secrets.FASTLANE_APPLE_ID }}'
+        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: '${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}'
+        MATCH_PASSWORD: '${{ secrets.MATCH_PASSWORD }}'
+        GIT_AUTHORIZATION: '${{ secrets.GIT_AUTHORIZATION }}'
+        PROVISIONING_PROFILE_SPECIFIER: '${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}'
+        TEMP_KEYCHAIN_PASSWORD: '${{ secrets.TEMP_KEYCHAIN_PASSWORD }}'
+        TEMP_KEYCHAIN_USER: '${{ secrets.TEMP_KEYCHAIN_USER }}'
+        APPLE_KEY_ID: '${{ secrets.APPLE_KEY_ID }}'
+        APPLE_ISSUER_ID: '${{ secrets.APPLE_ISSUER_ID }}'
+        APPLE_KEY_CONTENT: '${{ secrets.APPLE_KEY_CONTENT }}'
