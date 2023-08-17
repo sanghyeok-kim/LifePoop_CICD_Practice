@@ -30,8 +30,8 @@ TARGET_SCHEME = "App"
 
 
 platform :ios do
-  lane :beta do |options|
-    new_version_number = options[:new_version_number]
+  lane :beta do
+    new_version_number = "1.0.0"
     set_build_info(new_version_number)
 
     keychain_name = TEMP_KEYCHAIN_USER
