@@ -15,6 +15,8 @@
 
 default_platform(:ios)
 
+ENV['TZ'] = 'Asia/Seoul'
+
 DEVELOPER_APP_ID = ENV["DEVELOPER_APP_ID"]
 DEVELOPER_APP_IDENTIFIER = ENV["DEVELOPER_APP_IDENTIFIER"]
 PROVISIONING_PROFILE_SPECIFIER = ENV["PROVISIONING_PROFILE_SPECIFIER"]
@@ -30,14 +32,14 @@ TARGET_SCHEME = "App"
 TARGET_PATH = "./Projects/#{TARGET_SCHEME}/#{TARGET_SCHEME}.xcodeproj"
 XCCONFIGS_FILE_PATH = "../Projects/App/xcconfigs/App.base.xcconfig"
 
-
 platform :ios do
   lane :beta do |options|
-
+    
     # beta 명령어의 매개변수로 버전값 지정, 지정하지 않을 경우 xcconfig에 설정된 버전값을 가져와서 지정함
     new_version_number = options[:new_version_number] || get_xcconfig_value("MARKETING_VERSION")
     new_build_number = Time.new.strftime("%y%m%d.%H%M%S")
     set_build_info(new_build_number, new_version_number)
+    UI.message("New Version Number: #{new_version_number}, New Build Number: #{new_build_number}")
     
     keychain_name = TEMP_KEYCHAIN_USER
     keychain_password = TEMP_KEYCHAIN_PASSWORD
@@ -161,7 +163,7 @@ def set_xcconfig_value(targetKey, targetValue, xcconfigs_file_path = XCCONFIGS_F
   write_to_xcconfig_file(configs, xcconfigs_file_path)
 end
 
-# - Slack
+# - Slack Functions
 
 def send_slack_notification(version_number, build_number)
   slack(
